@@ -1,0 +1,1 @@
+Apenas rode `npm test`
