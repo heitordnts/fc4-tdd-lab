@@ -1,6 +1,7 @@
 import { PropertyService } from "./property_service";
 import { FakePropertyRepository } from "../../infrastructure/repositories/fake_property_repository";
 import { Property } from "../../domain/entities/property";
+import { CreatePropertyDTO } from "../dtos/create_property_dto";
 
 describe("PropertyService", () => {
   let propertyService: PropertyService;
@@ -37,5 +38,26 @@ describe("PropertyService", () => {
     expect(property).not.toBeNull();
     expect(property?.getId()).toBe("3");
     expect(property?.getName()).toBe("Test Property");
+  });
+
+  it("deve salvar uma nova propriedade com sucesso", async () => {
+
+    const dto: CreatePropertyDTO = {
+      name: "Test Property",
+      description: "Test Description",
+      maxGuests: 4,
+      pricePerNight: 100
+    }
+
+    const property = await propertyService.createProperty(dto);
+
+    const savedProperty = await fakePropertyRepository.findById(property.getId());
+
+    expect(property).not.toBeNull();
+    expect(property?.getId()).toBe(savedProperty?.getId());
+    expect(property?.getName()).toBe(savedProperty?.getName());
+    expect(property?.getDescription()).toBe(savedProperty?.getDescription());
+    expect(property?.getMaxGuests()).toBe(savedProperty?.getMaxGuests());
+    expect(property?.getBasePricePerNight()).toBe(savedProperty?.getBasePricePerNight());
   });
 });

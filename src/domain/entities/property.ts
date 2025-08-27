@@ -73,4 +73,8 @@ export class Property {
   addBooking(booking: Booking): void {
     this.bookings.push(booking);
   }
+
+  getBookings(): Booking[] {
+    return this.bookings;
+  }
 }

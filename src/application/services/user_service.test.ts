@@ -1,6 +1,7 @@
 import { UserService } from "./user_service";
 import { FakeUserRepository } from "../../infrastructure/repositories/fake_user_repository";
 import { User } from "../../domain/entities/user";
+import { CreateUserDTO } from "../dtos/create_user_dto";
 describe("UserService", () => {
   let userService: UserService;
   let fakeUserRepository: FakeUserRepository;
@@ -30,5 +31,19 @@ describe("UserService", () => {
     expect(user).not.toBeNull();
     expect(user?.getId()).toBe("3");
     expect(user?.getName()).toBe("Test User");
+  });
+
+  it("deve criar um novo usuário com sucesso", async () => {
+    const userDTO : CreateUserDTO = {
+      name: "Test User"
+    }
+
+    const user = await userService.createUser(userDTO);
+
+    const savedUser = await fakeUserRepository.findById(user.getId());
+
+    expect(user).not.toBeNull();
+    expect(user?.getId()).toBe(savedUser?.getId());
+    expect(user?.getName()).toBe(savedUser?.getName());
   });
 });
